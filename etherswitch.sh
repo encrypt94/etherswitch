@@ -1,5 +1,6 @@
 #!/bin/env bash
 
+conf=~/.etherswitch
 switch_state=0
 
 function check_fn {
@@ -9,7 +10,10 @@ function check_fn {
     }
 }
 
-source ~/.etherswitch
+source $conf
+
+# handle SIGTERM
+trap 'exit' 15
 
 if [ -z "$device" ]
 then
