@@ -1,7 +1,7 @@
 #!/bin/env bash
 
 conf=~/.etherswitch
-switch_state=0
+switch_state=-1
 
 function check_fn {
     type $1 &> /dev/null || {
@@ -37,18 +37,15 @@ load_config
 
 while :
 do
-    ip link show $device | grep -q "LOWER_UP" 
-    if [ $? -eq 1 ]
+    ip link show $device | grep -q "LOWER_UP"
+    current_state=$?
+    if [ $current_state -ne $switch_state ]
     then
+	switch_state=$current_state
 	if [ $switch_state -eq 1 ]
 	then
-	    switch_state=0
 	    on_switch_open
-	fi	    
-    else
-	if [ $switch_state -eq 0 ]
-	then
-	    switch_state=1
+	else
 	    on_switch_close
 	fi
     fi
