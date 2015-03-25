@@ -2,6 +2,13 @@
 
 STATE=0
 
+function check_fn {
+    type $1 &> /dev/null || {
+	echo "$1 is undefined"
+	exit 1
+    }
+}
+
 source ~/.etherswitch
 
 if [ -z "$device" ]
@@ -14,6 +21,9 @@ fi
 ip link show $device > /dev/null
 if [ $? -eq 1 ]; then exit 1; fi   
 
+check_fn "on_switch_close"
+check_fn "on_switch_open"
+
 while :
 do
     ip link show $device | grep -q "LOWER_UP" 
@@ -22,13 +32,13 @@ do
 	if [ $STATE -eq 1 ]
 	then
 	    STATE=0
-	    echo "not connected"
+	    on_switch_open
 	fi	    
     else
 	if [ $STATE -eq 0 ]
 	then
 	    STATE=1
-	    echo "connected"
+	    on_switch_close
 	fi
     fi
     sleep 0.3
