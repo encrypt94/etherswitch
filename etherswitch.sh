@@ -1,6 +1,6 @@
 #!/bin/env bash
 
-STATE=0
+switch_state=0
 
 function check_fn {
     type $1 &> /dev/null || {
@@ -29,18 +29,17 @@ do
     ip link show $device | grep -q "LOWER_UP" 
     if [ $? -eq 1 ]
     then
-	if [ $STATE -eq 1 ]
+	if [ $switch_state -eq 1 ]
 	then
-	    STATE=0
+	    switch_state=0
 	    on_switch_open
 	fi	    
     else
-	if [ $STATE -eq 0 ]
+	if [ $switch_state -eq 0 ]
 	then
-	    STATE=1
+	    switch_state=1
 	    on_switch_close
 	fi
     fi
     sleep 0.3
 done
-
