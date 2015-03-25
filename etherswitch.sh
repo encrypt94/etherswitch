@@ -4,19 +4,19 @@ STATE=0
 
 source ~/.etherswitch
 
-if [ -z "$interface" ]
+if [ -z "$device" ]
 then
-    echo "interface is not set"
+    echo "device is not set"
     exit 1
 fi
 
-# check if $interface is a network device
-ip link show $interface > /dev/null
+# check if $device is a network device
+ip link show $device > /dev/null
 if [ $? -eq 1 ]; then exit 1; fi   
 
 while :
 do
-    ip link show $interface | grep -q "LOWER_UP" 
+    ip link show $device | grep -q "LOWER_UP" 
     if [ $? -eq 1 ]
     then
 	if [ $STATE -eq 1 ]
