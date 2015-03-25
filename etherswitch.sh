@@ -13,18 +13,23 @@ function check_fn {
 function load_config {
     unset -f on_switch_close
     unset -f on_switch_open
+    unset -f on_switch_toggle
+
     source $conf
+
     if [ -z "$device" ]
     then
 	>&2 echo "device is not set"
 	exit 1
     fi
+
     # check if $device is a network device
     ip link show $device > /dev/null
     if [ $? -eq 1 ]; then exit 1; fi
 
     check_fn "on_switch_close"
     check_fn "on_switch_open"
+    check_fn "on_switch_toggle"
 }
 
 # handle SIGTERM
@@ -42,6 +47,7 @@ do
     if [ $current_state -ne $switch_state ]
     then
 	switch_state=$current_state
+	on_switch_toggle
 	if [ $switch_state -eq 1 ]
 	then
 	    on_switch_open
