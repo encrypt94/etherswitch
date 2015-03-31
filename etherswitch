@@ -46,6 +46,8 @@ trap 'load_config' 1
 
 load_config
 
+echo $$ > /var/run/etherswitch.pid
+
 while :
 do
     swconfig dev $device port $port show | grep -q "up"
