@@ -1,0 +1,13 @@
+#!/bin/sh /etc/rc.common
+
+START=99
+STOP=99
+
+start() {
+
+    /usr/bin/etherswitch  &> /var/log/etherswitch.log &
+}
+
+stop() {
+    kill -15 `cat /var/run/etherswitch.pid`    
+}
