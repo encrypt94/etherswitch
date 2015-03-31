@@ -1,16 +1,16 @@
-#!/bin/env bash
+#!/bin/sh
 
-conf=~/.etherswitch
+conf=/etc/etherswitch.rc
 switch_state=-1
 
-function check_fn {
+check_fn() {
     type $1 &> /dev/null || {
 	>&2 echo "$1 is undefined"
 	exit 1
     }
 }
 
-function load_config {
+load_config() {
     unset -f on_switch_close
     unset -f on_switch_open
     unset -f on_switch_toggle
@@ -23,8 +23,14 @@ function load_config {
 	exit 1
     fi
 
+    if [ -z "$port" ]
+    then
+	>&2 echo "port is not set"
+	exit 1
+    fi
+
     # check if $device is a network device
-    ip link show $device > /dev/null
+    swconfig dev $device show > /dev/null
     if [ $? -eq 1 ]; then exit 1; fi
 
     check_fn "on_switch_close"
@@ -42,7 +48,7 @@ load_config
 
 while :
 do
-    ip link show $device | grep -q "LOWER_UP"
+    swconfig dev $device port $port show | grep -q "up"
     current_state=$?
     if [ $current_state -ne $switch_state ]
     then
@@ -55,5 +61,5 @@ do
 	    on_switch_close
 	fi
     fi
-    sleep 0.3
+    sleep 1
 done
