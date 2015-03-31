@@ -1,0 +1,16 @@
+device=eth0
+port=0
+
+# called when the switch is on
+on_switch_close() {
+    : 
+}
+
+# called when the switch is off
+on_switch_open() {
+    :
+}
+
+on_switch_toggle() {
+    :
+}
