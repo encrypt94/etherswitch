@@ -1,6 +1,6 @@
 #!/bin/sh
 
-conf=/etc/etherswitch.rc
+conf=/etc/config/etherswitch
 switch_state=-1
 
 check_fn() {
